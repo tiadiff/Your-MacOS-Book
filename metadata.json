@@ -1,0 +1,5 @@
+{
+  "name": "LibroMagico",
+  "description": "Un libro digitale interattivo con modalità editor Markdown e lettura.",
+  "requestFramePermissions": []
+}
