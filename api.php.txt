@@ -1,0 +1,58 @@
+<?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Content-Type: application/json");
+
+$filename = 'book.json';
+
+// Gestione pre-flight request (CORS)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+// 1. Lettura del libro (GET)
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    if (file_exists($filename)) {
+        echo file_get_contents($filename);
+    } else {
+        // Se il file non esiste, restituisci un JSON di default vuoto o con dati di esempio
+        echo json_encode([
+            "title" => "Il Nuovo Libro",
+            "author" => "Autore Sconosciuto",
+            "pages" => [
+                [
+                    "id" => "1",
+                    "pageNumber" => 1,
+                    "title" => "Pagina 1",
+                    "content" => "Inizia a scrivere la tua storia..."
+                ]
+            ]
+        ]);
+    }
+    exit;
+}
+
+// 2. Salvataggio del libro (POST)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $input = file_get_contents('php://input');
+    
+    // Validazione base per assicurarsi che sia JSON
+    $decoded = json_decode($input);
+    if ($decoded === null) {
+        http_response_code(400);
+        echo json_encode(["status" => "error", "message" => "Invalid JSON"]);
+        exit;
+    }
+
+    // Scrittura su file
+    if (file_put_contents($filename, $input)) {
+        echo json_encode(["status" => "success", "message" => "Book saved"]);
+    } else {
+        http_response_code(500);
+        echo json_encode(["status" => "error", "message" => "Could not write file"]);
+    }
+    exit;
+}
+?>
