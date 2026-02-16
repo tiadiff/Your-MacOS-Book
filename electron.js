@@ -9,13 +9,15 @@ function createWindow() {
     const win = new BrowserWindow({
         width: 1200,
         height: 800,
+        fullscreen: true,
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
-            webSecurity: true, // Crucial for security
+            webSecurity: true,
         },
-        icon: path.join(__dirname, 'dist', 'icon.icns'), // We will handle icon placement during build
+        icon: path.join(__dirname, 'dist', 'icon.icns'),
     });
+
 
     // Load the dist/index.html file
     const indexPath = path.join(__dirname, 'dist', 'index.html');
